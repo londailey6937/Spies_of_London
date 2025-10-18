@@ -680,59 +680,6 @@
               setupPopupUpdates();
           }, 2000);
       }
-        // Complete agent movement (reached destination)
-        function completeAgentMovement(agentId) {
-            const agent = agents[agentId];
-            
-            // Fix: Add null check to avoid "Cannot read properties of null" error
-            if (!agent.path || agent.path.length === 0) {
-                console.error(`Invalid path for agent ${agentId}`);
-                agent.animationInProgress = false;
-                return;
-            }
-            
-            const targetLocation = agent.path[agent.path.length - 1];
-            
-            // Update agent location
-            agent.location = targetLocation;
-            
-            // Update UI
-            if (agentId === "mi6") {
-                document.getElementById("mi6-location").textContent = 
-                    "Location: " + allLocations[targetLocation].name;
-            }
-            
-            // Flash marker to indicate arrival
-            const markerEl = agent.marker.getElement();
-            markerEl.classList.add("agent-operating");
-            
-            // Show popup
-            agent.marker.setPopup(
-                new mapboxgl.Popup({ className: 'transparent-popup' })
-                    .setText(`${agent.name} has arrived at ${allLocations[targetLocation].name}`)
-            ).togglePopup();
-            
-            // For rival agents, begin operation
-            if (agentId !== "mi6") {
-                // Start rival agent operation
-                beginRivalOperation(agentId);
-            } else {
-                // Remove animation after a delay
-                setTimeout(() => {
-                    markerEl.classList.remove("agent-operating");
-                    
-                    // Close popup
-                    if (agent.marker.getPopup().isOpen()) {
-                        agent.marker.togglePopup();
-                    }
-                    
-                    // Turn off following if enabled
-                    if (isFollowingAgent && activeAgentId === agentId) {
-                        toggleAgentFollowing();
-                    }
-                }, 3000);
-            }
-        }
 
         // Begin operation for rival agent
         function beginRivalOperation(agentId) {
