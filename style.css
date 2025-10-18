@@ -1,0 +1,832 @@
+
+       /* =============================================================================
+          BASE STYLES
+          ============================================================================= */
+       body {
+           margin: 0;
+           padding: 0;
+           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+           color: white;
+       }
+
+       #map {
+           position: absolute;
+           top: 0;
+           bottom: 0;
+           height: 100vh;
+           width: 100%;
+       }
+
+       /* =============================================================================
+          AGENT MARKERS
+          ============================================================================= */
+       .agent-marker {
+           width: 30px;
+           height: 30px;
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 12px;
+           font-weight: bold;
+           border: 2px solid white;
+           box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+       }
+
+       .mi6-agent {
+           background-color: #0078d7;
+       }
+
+       .rival-agent {
+           cursor: pointer;
+       }
+
+       .agent-operating {
+           animation: pulse 1.5s infinite;
+       }
+
+       .agent-badge {
+           display: inline-block;
+           min-width: 30px;
+           width: 30px;
+           min-height: 30px;
+           height: 30px;
+           border-radius: 50%;
+           font-size: 12px;
+           font-weight: bold;
+           margin-right: 10px;
+           text-align: center;
+           line-height: 30px;
+           overflow: hidden;
+       }
+
+       /* =============================================================================
+          POI AND SPECIAL MARKERS
+          ============================================================================= */
+       .poi-marker {
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           width: 24px;
+           height: 24px;
+           background-color: #ff6b6b;
+           border-radius: 50%;
+           border: 2px solid white;
+           box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+           cursor: pointer;
+           font-size: 12px;
+           color: white;
+           font-weight: bold;
+       }
+
+       .poi-marker.highlight {
+           animation: pulse 1.5s infinite;
+       }
+
+       .intelligence-marker {
+           background-color: #ffd700 !important;
+           animation: pulse 1.5s infinite;
+       }
+
+       .prediction-marker {
+           animation: pulse 1.5s infinite;
+       }
+
+       /* =============================================================================
+          ANIMATIONS
+          ============================================================================= */
+       @keyframes pulse {
+           0% {
+               transform: scale(1);
+               box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+           }
+           50% {
+               transform: scale(1.05);
+               box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.4);
+           }
+           100% {
+               transform: scale(1);
+               box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+           }
+       }
+
+       @keyframes blink {
+           0%, 100% { opacity: 1; }
+           50% { opacity: 0.5; }
+       }
+
+       /* =============================================================================
+          NAVIGATION AND UI PANELS
+          ============================================================================= */
+       .top-navbar {
+           position: absolute;
+           top: 0;
+           left: 0;
+           right: 0;
+           height: 60px;
+           background-color: rgba(30, 30, 30, 0.85);
+           color: white;
+           display: flex;
+           align-items: center;
+           padding: 0 20px;
+           z-index: 1000;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+           backdrop-filter: blur(5px);
+       }
+
+       .control-panel {
+           position: absolute;
+           bottom: 0;
+           left: 0;
+           right: 0;
+           height: 60px;
+           background-color: rgba(30, 30, 30, 0.85);
+           color: white;
+           display: flex;
+           align-items: center;
+           padding: 0 20px;
+           z-index: 1000;
+           box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+           backdrop-filter: blur(5px);
+       }
+
+       .control-panel-notification {
+           position: absolute;
+           bottom: 15px;
+           left: 50%;
+           transform: translateX(-50%);
+           background-color: rgba(45, 55, 72, 0.85);
+           color: white;
+           padding: 10px 20px;
+           border-radius: 8px;
+           font-size: 14px;
+           z-index: 1002;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           opacity: 0;
+           transition: opacity 0.3s, transform 0.3s;
+           pointer-events: none;
+       }
+
+       .control-panel-notification.show {
+           opacity: 1;
+           transform: translateX(-50%) translateY(0);
+       }
+
+       .toggle-icons {
+           position: fixed;
+           top: 70px;
+           left: 10px;
+           z-index: 3000;
+           display: flex;
+           gap: 10px;
+           flex-direction: row;
+       }
+
+       .toggle-icon {
+           width: 40px;
+           height: 40px;
+           background-color: rgba(30, 30, 30, 0.85);
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 20px;
+           cursor: pointer;
+           color: white;
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           transition: all 0.3s;
+       }
+
+       .toggle-icon:hover {
+           background-color: rgba(30, 30, 30, 0.95);
+           transform: scale(1.1);
+       }
+
+       .toggle-icon.active {
+           background-color: rgba(49, 130, 206, 0.9);
+       }
+
+       
+
+       .rival-monitor {
+           right: 50px;
+       }
+
+       /* =============================================================================
+          LOGO AND HEADER ELEMENTS
+          ============================================================================= */
+       .logo-section {
+           flex: 0 0 400px;
+           display: flex;
+           align-items: center;
+       }
+
+       .logo-section h1 {
+           margin: 0;
+           font-size: 20px;
+           color: white;
+           font-weight: 600;
+           text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+       }
+
+       .description-text {
+           font-size: 12px;
+           opacity: 0.8;
+           margin-left: 15px;
+       }
+
+       /* =============================================================================
+          SEARCH CONTAINER
+          ============================================================================= */
+       .search-container {
+           flex: 1;
+           display: flex;
+           align-items: center;
+           margin: 0 20px;
+       }
+
+       .search-container input {
+           background-color: rgba(255, 255, 255, 0.1);
+           border: 1px solid rgba(255, 255, 255, 0.3);
+           color: white;
+           padding: 8px 12px;
+           border-radius: 4px;
+           flex-grow: 1;
+           margin-right: 10px;
+       }
+
+       .search-container input::placeholder {
+           color: rgba(255, 255, 255, 0.6);
+       }
+
+       /* =============================================================================
+          MENU AND BUTTONS
+          ============================================================================= */
+       .main-menu {
+           flex: 0 0 auto;
+           display: flex;
+           gap: 10px;
+       }
+
+       button {
+           background-color: #2c5282;
+           color: white;
+           border: none;
+           padding: 8px 15px;
+           border-radius: 4px;
+           cursor: pointer;
+           transition: background-color 0.2s, box-shadow 0.2s;
+           font-size: 13px;
+           font-weight: 500;
+       }
+
+       button:hover {
+           background-color: #3182ce;
+           box-shadow: 0 0 5px rgba(49, 130, 206, 0.5);
+       }
+
+       button.active {
+           background-color: #e53e3e;
+           box-shadow: 0 0 10px rgba(229, 62, 62, 0.5);
+       }
+
+       .control-panel button + button {
+           margin-left: 10px;
+       }
+
+       #mi6-abort {
+           background-color: #e53e3e;
+       }
+
+       #mi6-abort:hover {
+           background-color: #c53030;
+           box-shadow: 0 0 5px rgba(229, 62, 62, 0.5);
+       }
+
+       /* =============================================================================
+          AGENT STATUS DISPLAYS
+          ============================================================================= */
+       .agent-status {
+           display: flex;
+           align-items: center;
+           margin-right: 20px;
+       }
+
+       .status-details {
+           display: flex;
+           flex-direction: column;
+           margin-right: 20px;
+       }
+
+       .status-location, .status-target, .path-line {
+           margin: 2px 0;
+           font-size: 12px;
+       }
+
+       .path-line {
+           opacity: 0.7;
+       }
+
+       .location-select {
+           background-color: rgba(255, 255, 255, 0.1);
+           color: white;
+           border: 1px solid rgba(255, 255, 255, 0.3);
+           padding: 7px 10px;
+           border-radius: 4px;
+           margin-right: 10px;
+           min-width: 180px;
+           margin-left: 15px;
+       }
+
+       .location-select option {
+           background-color: #2d3748;
+           color: white;
+           padding: 10px;
+       }
+
+       select {
+           transition-delay: 0.1s;
+       }
+
+       /* =============================================================================
+          POPUP STYLES
+          ============================================================================= */
+       .transparent-popup .mapboxgl-popup-content {
+           background: rgba(30, 30, 30, 0.8);
+           color: white;
+           padding: 12px;
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           border-radius: 4px;
+           backdrop-filter: blur(5px);
+           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+       }
+
+       .transparent-popup .mapboxgl-popup-tip {
+           border-top-color: rgba(30, 30, 30, 0.8) !important;
+           border-bottom-color: rgba(30, 30, 30, 0.8) !important;
+       }
+
+       .transparent-popup h3 {
+           margin: 0 0 8px 0;
+           font-size: 16px;
+           font-weight: 600;
+       }
+
+       .transparent-popup p {
+           margin: 5px 0;
+           font-size: 13px;
+           opacity: 0.9;
+       }
+
+       .popup-actions {
+           margin-top: 10px;
+           display: flex;
+           gap: 5px;
+       }
+
+       /* =============================================================================
+          NOTIFICATION SYSTEM
+          ============================================================================= */
+       .notification {
+           position: absolute;
+           top: 70px;
+           left: 50%;
+           transform: translateX(-50%);
+           background-color: rgba(45, 55, 72, 0.85);
+           backdrop-filter: blur(5px);
+           color: white;
+           padding: 10px 20px;
+           border-radius: 8px;
+           font-size: 14px;
+           z-index: 1001;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           opacity: 0;
+           transition: opacity 0.3s, transform 0.3s;
+           pointer-events: none;
+           max-width: 300px;
+           text-align: center;
+       }
+
+       .notification.show {
+           opacity: 1;
+           transform: translateX(-50%) translateY(0);
+       }
+
+       .follow-indicator {
+           position: absolute;
+           top: 70px;
+           left: 50%;
+           transform: translateX(-50%);
+           background-color: rgba(49, 130, 206, 0.7);
+           backdrop-filter: blur(5px);
+           color: white;
+           padding: 8px 15px;
+           border-radius: 8px;
+           font-size: 13px;
+           z-index: 1001;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           display: none;
+           align-items: center;
+           justify-content: center;
+       }
+
+       /* =============================================================================
+          RIVAL MONITOR PANEL
+          ============================================================================= */
+       .rival-monitor {
+           position: absolute;
+           top: 70px;
+           right: 10px;
+           width: 300px;
+           background-color: rgba(30, 30, 30, 0.85);
+           color: white;
+           border-radius: 5px;
+           padding: 12px;
+           z-index: 1001;
+           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           backdrop-filter: blur(5px);
+           font-size: 13px;
+           max-height: 500px;
+           overflow-y: auto;
+           transition: transform 0.3s, opacity 0.3s;
+       }
+
+       .rival-monitor.collapsed {
+           transform: translateX(295px);
+       }
+
+       .rival-monitor-header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           margin-bottom: 10px;
+           padding-bottom: 5px;
+           border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+       }
+
+       .rival-minimize {
+           cursor: pointer;
+           background: rgba(255, 255, 255, 0.1);
+           padding: 2px 5px;
+           border-radius: 3px;
+           transition: background-color 0.2s;
+       }
+
+       .rival-minimize:hover {
+           background: rgba(255, 255, 255, 0.2);
+       }
+
+       .rival-agency {
+           margin-bottom: 15px;
+       }
+
+       .rival-agency-header {
+           display: flex;
+           align-items: center;
+           margin-bottom: 5px;
+           font-weight: bold;
+       }
+
+       .rival-color-dot {
+           width: 12px;
+           height: 12px;
+           border-radius: 50%;
+           margin-right: 8px;
+       }
+
+       .rival-agent-item {
+           display: flex;
+           justify-content: space-between;
+           padding: 4px 8px;
+           margin-bottom: 4px;
+           border-radius: 3px;
+           background-color: rgba(255, 255, 255, 0.05);
+       }
+
+       .rival-agent-id {
+           font-weight: 500;
+       }
+
+       .rival-status {
+           max-width: 180px;
+           white-space: nowrap;
+           overflow: hidden;
+           text-overflow: ellipsis;
+       }
+
+       .rival-idle {
+           color: #aaa;
+       }
+
+       .rival-moving {
+           color: #63b3ed;
+       }
+
+       .rival-operating {
+           color: #fc8181;
+           animation: blink 1s infinite;
+       }
+
+       /* =============================================================================
+          ANALYSIS PANEL
+          ============================================================================= */
+       
+       .analysis-panel {
+           position: absolute;
+           top: 70px;
+           left: 10px;
+           width: 300px;
+           background-color: rgba(30, 30, 30, 0.85);
+           color: white;
+           border-radius: 5px;
+           padding: 12px;
+           z-index: 1002;
+           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           backdrop-filter: blur(5px);
+           font-size: 13px;
+           max-height: 500px;
+           overflow-y: auto;
+           display: block;
+           opacity: 1;   
+           visibility: visible;
+       }
+
+       .analysis-panel.collapsed {
+           transform: translateX(-295px);
+       }
+
+       /* Floating panels - starts hidden */
+       .analysis-panel, .rival-monitor {
+           position: fixed !important;
+           opacity: 0 !important;
+           visibility: hidden !important;
+           transition: all 0.3s ease-in-out;
+           transform: scale(0.9);
+           transform-origin: top left;
+       }
+
+       .analysis-panel.visible, .rival-monitor.visible {
+           opacity: 1 !important;
+           visibility: visible !important;
+           transform: scale(1);
+       }
+
+       /* Optional: Animate panel positions */
+       .analysis-panel {
+           left: 50px;
+       }
+
+       .analysis-header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           margin-bottom: 10px;
+           padding-bottom: 5px;
+           border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+       }
+
+       .analysis-header button {
+           background-color: #2c5282;
+           color: white;
+           border: none;
+           padding: 5px 10px;
+           border-radius: 4px;
+           cursor: pointer;
+           font-size: 12px;
+       }
+
+       .analysis-header button:hover {
+           background-color: #3182ce;
+       }
+
+       .analysis-header h3 {
+           margin: 0;
+           font-size: 13px;
+           font-weight: normal;
+       }
+
+       .minimize-button {
+           cursor: pointer;
+           background: rgba(255, 255, 255, 0.1);
+           padding: 2px 5px;
+           border-radius: 3px;
+           transition: background-color 0.2s;
+       }
+
+       .minimize-button:hover {
+           background: rgba(255, 255, 255, 0.2);
+       }
+
+       .analysis-content {
+           display: block;
+       }
+
+       .analysis-content select {
+           width: 100%;
+           margin-bottom: 10px;
+           padding: 8px;
+           background-color: rgba(255, 255, 255, 0.1);
+           color: white;
+           border: 1px solid rgba(255, 255, 255, 0.3);
+           border-radius: 4px;
+       }
+
+       .pattern-data {
+           margin: 10px 0;
+           padding: 10px;
+           background-color: rgba(255, 255, 255, 0.05);
+           border-radius: 4px;
+       }
+
+       .intelligence-score {
+           background-color: rgba(255, 215, 0, 0.2);
+           color: #ffd700;
+           padding: 5px 10px;
+           border-radius: 4px;
+           font-weight: bold;
+           margin-left: 10px;
+       }
+
+       /* =============================================================================
+          INTRO AND LOADING ANIMATIONS
+          ============================================================================= */
+       .intro-animation-overlay {
+           position: fixed;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           background-color: rgba(0, 0, 0, 0.7);
+           z-index: 10000;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           justify-content: center;
+           transition: opacity 1.5s ease-in-out;
+       }
+
+       .intro-title {
+           position: relative;
+           color: white;
+           text-align: center;
+           text-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+           z-index: 10001;
+       }
+
+       .intro-title h1 {
+           font-size: 4rem;
+           margin: 20px 0;
+           letter-spacing: 3px;
+           font-family: 'Arial Black', sans-serif;
+           text-transform: uppercase;
+           text-shadow: 0 0 20px rgba(76, 169, 255, 0.8);
+       }
+
+       .intro-title p {
+           font-size: 1.6rem;
+           opacity: 0.9;
+       }
+
+       .spy-icon {
+           font-size: 10rem !important;
+           margin-bottom: 30px;
+           display: block;
+           line-height: 1;
+       }
+
+       .intro-progress {
+           position: absolute;
+           bottom: 50px;
+           left: 50%;
+           transform: translateX(-50%);
+           width: 300px;
+           height: 5px;
+           background: rgba(255, 255, 255, 0.2);
+           border-radius: 5px;
+           overflow: hidden;
+       }
+
+       .progress-inner {
+           height: 100%;
+           width: 0%;
+           background: rgba(255, 255, 255, 0.8);
+           transition: width 3s linear;
+       }
+
+       /* =============================================================================
+          INTELLIGENCE REPORT
+          ============================================================================= */
+       .intelligence-report-overlay {
+           position: fixed;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           background-color: rgba(0, 0, 0, 0.7);
+           z-index: 2000;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+       }
+
+       .intelligence-report {
+           width: 80%;
+           max-width: 600px;
+           background-color: rgba(30, 30, 30, 0.95);
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           border-radius: 8px;
+           padding: 20px;
+           box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+       }
+
+       .intelligence-report h2 {
+           color: #ffd700;
+           text-align: center;
+           margin-bottom: 20px;
+           border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+           padding-bottom: 10px;
+       }
+
+       .agent-intel {
+           margin-bottom: 15px;
+           padding: 10px;
+           background-color: rgba(255, 255, 255, 0.05);
+           border-radius: 4px;
+       }
+
+       .agent-intel h3 {
+           color: #e1e1e1;
+           margin-top: 0;
+       }
+
+       .close-button {
+           display: block;
+           margin: 20px auto 0;
+           padding: 8px 15px;
+           background-color: #4a5568;
+           color: white;
+           border: none;
+           border-radius: 4px;
+           cursor: pointer;
+       }
+
+       .close-button:hover {
+           background-color: #2d3748;
+       }
+
+      .centered-toggle-container {
+          position: absolute;
+          top: 60px; /* Reduced from 80px to move closer to navbar */
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 20px;
+          padding: 8px 15px;
+          border-radius: 8px;
+          /* Removed background-color property */
+      }
+
+      .notification-space {
+          min-width: 150px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .toggle-icon {
+          font-size: 1.5rem;
+          cursor: pointer;
+          padding: 8px;
+          border-radius: 50%;
+          background-color: rgba(255, 255, 255, 0.1);
+          transition: background-color 0.3s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .toggle-icon:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      #central-notification {
+          color: white;
+          text-align: center;
+          font-size: 0.9rem;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+      }
+
+      #central-notification.active {
+          opacity: 1;
+      }
+    

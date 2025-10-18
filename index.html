@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Spies of London</title>
+
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="map"></div>
+
+        <!-- Top navigation bar -->
+        <div class="top-navbar">
+            <div class="logo-section">
+                <h1>Spies of London</h1>
+                <span class="description-text">MI6 agents track foreign operatives across London</span>
+            </div>
+            <div class="search-container">
+                <input type="text" id="poi-search" placeholder="Search for locations in London...">
+                <button id="search-button">Search</button>
+            </div>
+            
+            <div class="main-menu">
+                <button id="reset-game">Reset Game</button>
+                <button id="zoom-in">Zoom In</button>
+                <button id="follow-button">Follow Agent</button>
+            </div>
+        </div>
+
+        <!-- Toggle icons below navbar, centered horizontally, no background -->
+        <div class="centered-toggle-container">
+            <div class="toggle-icon" id="toggle-intel" title="Intelligence Panel">🔍</div>
+            <div class="notification-space" id="central-notification"></div>
+            <div class="toggle-icon" id="toggle-rivals" title="Rival Agents Monitor">👁️</div>
+        </div>
+
+
+        <!-- Notification area -->
+        <div id="notification" class="notification"></div>
+
+        <!-- Follow indicator -->
+        <div id="follow-indicator" class="follow-indicator">Following MI6 Agent</div>
+
+      
+
+        <!-- Intelligence Analysis panel -->
+        <div id="analysis-panel" class="analysis-panel">
+            <div class="analysis-header">
+                <div>INTELLIGENCE ANALYSIS</div>
+                <div class="minimize-button" id="analysis-minimize">[-]</div>
+            </div>
+            <div class="analysis-content">
+                <div id="intel-agencies">
+                    <!-- Embassy sections -->
+                    <div class="rival-agency">
+                        <div class="rival-agency-header">
+                            <div class="rival-color-dot" style="background-color: #e53e3e;"></div>
+                            <div>Russian (RUS)</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-rus1">
+                            <div class="rival-agent-id">R1:</div>
+                            <div class="rival-status">Intel: Limited data</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-rus2">
+                            <div class="rival-agent-id">R2:</div>
+                            <div class="rival-status">Intel: No recent activity</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-rus3">
+                            <div class="rival-agent-id">R3:</div>
+                            <div class="rival-status">Intel: Unknown patterns</div>
+                        </div>
+                    </div>
+                    
+                    <div class="rival-agency">
+                        <div class="rival-agency-header">
+                            <div class="rival-color-dot" style="background-color: #dd6b20;"></div>
+                            <div>Chinese (CHN)</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-chn1">
+                            <div class="rival-agent-id">C1:</div>
+                            <div class="rival-status">Intel: No data</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-chn2">
+                            <div class="rival-agent-id">C2:</div>
+                            <div class="rival-status">Intel: No data</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-chn3">
+                            <div class="rival-agent-id">C3:</div>
+                            <div class="rival-status">Intel: No data</div>
+                        </div>
+                    </div>
+                    
+                    <div class="rival-agency">
+                        <div class="rival-agency-header">
+                            <div class="rival-color-dot" style="background-color: #3182ce;"></div>
+                            <div>French (FRA)</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-fra1">
+                            <div class="rival-agent-id">F1:</div>
+                            <div class="rival-status">Intel: Minimal data</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-fra2">
+                            <div class="rival-agent-id">F2:</div>
+                            <div class="rival-status">Intel: No data</div>
+                        </div>
+                    </div>
+                    
+                    <div class="rival-agency">
+                        <div class="rival-agency-header">
+                            <div class="rival-color-dot" style="background-color: #2c5282;"></div>
+                            <div>German (GER)</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-ger1">
+                            <div class="rival-agent-id">G1:</div>
+                            <div class="rival-status">Intel: No data</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-ger2">
+                            <div class="rival-agent-id">G2:</div>
+                            <div class="rival-status">Intel: No data</div>
+                        </div>
+                    </div>
+                    
+                    <div class="rival-agency">
+                        <div class="rival-agency-header">
+                            <div class="rival-color-dot" style="background-color: #2c7a7b;"></div>
+                            <div>US (USA)</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-usa1">
+                            <div class="rival-agent-id">U1:</div>
+                            <div class="rival-status">Intel: No data</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-usa2">
+                            <div class="rival-agent-id">U2:</div>
+                            <div class="rival-status">Intel: No data</div>
+                        </div>
+                        <div class="rival-agent-item" id="intel-usa3">
+                            <div class="rival-agent-id">U3:</div>
+                            <div class="rival-status">Intel: No data</div>
+                        </div>
+                    </div>
+                </div>
+                <button id="analyze-intel" style="margin-top: 15px; width: 100%;">Analyze Intelligence</button>
+            </div>
+        </div>
+
+        <!-- Control panel -->
+        <div class="control-panel">
+            <div class="agent-status">
+                <div class="agent-badge mi6-agent">MI6</div>
+                <div class="status-details">
+                    <div class="status-location" id="mi6-location">Location: MI6 Headquarters</div>
+                    <div class="status-target" id="mi6-target">Target: None</div>
+                    <div class="path-line" id="mi6-path"></div>
+                </div>
+                <select id="mi6-destination" class="location-select">
+                    <option value="">Select destination...</option>
+                </select>
+                <button id="mi6-move">Send Agent</button>
+                <button id="mi6-abort" style="display: none;">Abort Mission</button>
+            </div>
+        </div></div>
+
+        <div id="control-panel-notification" class="control-panel-notification">
+            Intelligence update available!
+        </div>
+
+        <!-- Rival agents monitor -->
+        <div id="rival-monitor" class="rival-monitor">
+            <div class="rival-monitor-header">
+                <div class="rival-minimize" id="rival-minimize">[-]</div>
+                <div>FOREIGN AGENT TRACKING</div>
+            </div>
+            <div id="rival-agencies">
+                <!-- Agency sections will be dynamically added here by JavaScript -->
+            </div>
+        </div>
+       
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+        <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+        <script src="./script.js"></script>
+    </body>
+</html>
