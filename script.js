@@ -155,7 +155,6 @@
         // =============================================================================
 
         // Create accessible popups that avoid aria-hidden issues
-        // Create accessible popups that avoid aria-hidden issues
         function createAccessiblePopup(options = {}) {
             // Merge provided options with defaults
             const popupOptions = {
@@ -2569,7 +2568,6 @@
                         
                         window.collectedIntelligence.push(intelData);
                         
-                        // Remove intelligence score updates
                         
                         // Show notification without point value
                         showNotification(`Intelligence collected: ${intelData.type}`);
