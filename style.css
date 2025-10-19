@@ -172,6 +172,21 @@
            opacity: 1;
            transform: translateX(-50%) translateY(0);
        }
+       .centered-toggle-container {
+           position: absolute;
+           top: 60px; 
+           left: 50%;
+           transform: translateX(-50%);
+           z-index: 100;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 20px;
+           padding: 8px 15px;
+           border-radius: 8px;
+           background-color: rgba(30, 30, 30, 0.85);
+           box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+       }
 
        .toggle-icons {
            position: fixed;
@@ -779,20 +794,7 @@
            background-color: #2d3748;
        }
 
-      .centered-toggle-container {
-          position: absolute;
-          top: 60px; /* Reduced from 80px to move closer to navbar */
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 100;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 20px;
-          padding: 8px 15px;
-          border-radius: 8px;
-          /* Removed background-color property */
-      }
+   
 
       .notification-space {
           min-width: 150px;
